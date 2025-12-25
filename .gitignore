@@ -1,2 +1,10 @@
 *.db
 *~
+
+# Test artifacts
+dbs/
+*.db/
+test_output.txt
+
+# RocksDB database directories
+*.rocks/

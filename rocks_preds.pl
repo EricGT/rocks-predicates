@@ -85,6 +85,7 @@
     rdb_nth_clause(+, :, ?, ?),
     rdb_clause(+, :, -, ?),
     rdb_load_file(:),
+    rdb_load_file(+, :),
     rdb_index(:, +),
     rdb_index(+, :, +),
     rdb_destroy_index(:, +),
@@ -201,9 +202,15 @@ rdb_clause(Dir, Head, Body, CRef) =>
         string_concat(Prefix, Suffix, CRef)
     ).
 
+clause_head_body(M:(Head0 :- Body0), Head, Body) =>
+    Head = M:Head0,
+    Body = Body0.
 clause_head_body((Head0 :- Body0), Head, Body) =>
     Head = Head0,
     Body = Body0.
+clause_head_body(M:Head0, Head, Body) =>
+    Head = M:Head0,
+    Body = true.
 clause_head_body(Head0, Head, Body) =>
     Head = Head0,
     Body = true.
