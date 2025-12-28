@@ -42,7 +42,7 @@ test(property_backtrack) :-
 test(nonexistent_predicate) :-
     assertion(\+ rdb_current_predicate('dbs/test_props', nonexistent/1)).
 
-test(property_two_args) :-
+test(property_two_args, [nondet]) :-
     rdb_assertz(sample(data)),
     rdb_predicate_property(sample(_), Prop),
     assertion(ground(Prop)).
