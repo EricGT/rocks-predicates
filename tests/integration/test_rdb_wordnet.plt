@@ -3,10 +3,10 @@
 :- use_module('../../rocks_preds').
 :- use_module('../helpers/test_helpers_rdb').
 
-% Only run if wn.pl module exists
+% Only run if wn.pl file exists
 :- if(exists_source('../../wn.pl')).
 
-:- use_module('../../wn').
+:- consult('../../wn').
 
 :- begin_tests(wordnet_integration, [setup(setup_test_db(wn)), cleanup(cleanup_test_db(wn))]).
 

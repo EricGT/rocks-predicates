@@ -3,10 +3,10 @@
 :- use_module('../../rocks_preds').
 :- use_module('../helpers/test_helpers_rdb').
 
-% Only run if rdf.pl module exists
+% Only run if rdf.pl file exists
 :- if(exists_source('../../rdf.pl')).
 
-:- use_module('../../rdf').
+:- consult('../../rdf').
 
 :- begin_tests(rdf_integration, [setup(setup_test_db(rdf)), cleanup(cleanup_test_db(rdf))]).
 
