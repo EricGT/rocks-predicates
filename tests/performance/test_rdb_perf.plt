@@ -90,7 +90,8 @@ test_dataset_performance(Label, NumFacts) :-
            rdb_assertz('dbs/test_dataset', fact(N, N))),
     statistics(cputime, T1),
     InsertTime is T1 - T0,
-    InsertThroughput is NumFacts / InsertTime,
+    % Avoid division by zero if operation is too fast
+    (InsertTime > 0 -> InsertThroughput is NumFacts / InsertTime ; InsertThroughput = 999999999),
 
     NumQueries = 100,
     statistics(cputime, T2),
@@ -99,7 +100,8 @@ test_dataset_performance(Label, NumFacts) :-
             rdb_clause('dbs/test_dataset', fact(R, _), true))),
     statistics(cputime, T3),
     QueryTime is T3 - T2,
-    QueryLatency is (QueryTime * 1000000) / NumQueries,
+    % Avoid division by zero if operation is too fast
+    (QueryTime > 0 -> QueryLatency is (QueryTime * 1000000) / NumQueries ; QueryLatency = 0.01),
 
     format('Insert: ~0f facts/sec (~2f sec total)~n',
            [InsertThroughput, InsertTime]),

@@ -1,9 +1,6 @@
 % run_all_tests.pl - Master test runner for rocks-predicates Windows testing
 :- initialization(main, main).
 
-% Set working directory
-:- working_directory(_, 'c:/Users/Eric/Projects/Prolog_AI_Assistant_Research/rocks-predicates-windows').
-
 % Load rocks_predicates with Windows DLL configuration
 :- consult('load_rocks_predicates.pl').
 

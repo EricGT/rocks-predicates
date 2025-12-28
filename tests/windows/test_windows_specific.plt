@@ -6,10 +6,10 @@
 :- begin_tests(windows_edge_cases, [cleanup(cleanup_test_db(win))]).
 
 test(windows_case_insensitive_paths, [setup(cleanup_test_db(testdb))]) :-
-    rdb_open('dbs/test_TestDB', DB1),
+    rdb_open('dbs/test_TestDB', _DB1),
     rdb_assertz('dbs/test_TestDB', fact(a)),
     rdb_close('dbs/test_TestDB'),
-    rdb_open('dbs/test_testdb', DB2),
+    rdb_open('dbs/test_testdb', _DB2),
     rdb_clause('dbs/test_testdb', fact(a), true),
     rdb_close('dbs/test_testdb'),
     cleanup_test_db(testdb).

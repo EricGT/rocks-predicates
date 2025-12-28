@@ -10,14 +10,14 @@
 
 :- begin_tests(rdf_integration, [setup(setup_test_db(rdf)), cleanup(cleanup_test_db(rdf))]).
 
-test(rdf_triple_storage) :-
+test(rdf_triple_storage, [nondet]) :-
     rdb_assertz('dbs/test_rdf', rdf(subject1, predicate1, object1)),
     rdb_assertz('dbs/test_rdf', rdf(subject1, predicate2, object2)),
     % Check that our specific triples were stored
     rdb_clause('dbs/test_rdf', rdf(subject1, predicate1, object1), true),
     rdb_clause('dbs/test_rdf', rdf(subject1, predicate2, object2), true).
 
-test(rdf_query_subject) :-
+test(rdf_query_subject, [nondet]) :-
     rdb_assertz('dbs/test_rdf', rdf(subject1, knows, person2)),
     rdb_assertz('dbs/test_rdf', rdf(subject1, likes, item3)),
     % Check that our specific subject queries work
