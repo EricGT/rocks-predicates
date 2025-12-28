@@ -1,12 +1,11 @@
-% test_rdb_rdf.plt - RDF module integration tests
+% test_rdb_rdf.plt - RDF triple storage integration tests
+%
+% Tests that rocks_predicates can store and query RDF-style triples.
+% These tests are self-contained and don't require external RDF libraries.
+
 :- use_module(library(plunit)).
 :- use_module('../../rocks_preds').
 :- use_module('../helpers/test_helpers_rdb').
-
-% Only run if rdf.pl file exists
-:- if(exists_source('../../rdf.pl')).
-
-:- consult('../../rdf').
 
 :- begin_tests(rdf_integration, [setup(setup_test_db(rdf)), cleanup(cleanup_test_db(rdf))]).
 
@@ -33,15 +32,3 @@ test(rdf_persistence) :-
     rdb_close('dbs/test_rdf').
 
 :- end_tests(rdf_integration).
-
-:- else.
-
-% Placeholder test when rdf.pl is not available
-:- begin_tests(rdf_integration, []).
-
-test(rdf_module_not_available, [condition(fail)]) :-
-    format('RDF module not found - skipping RDF tests~n').
-
-:- end_tests(rdf_integration).
-
-:- endif.
