@@ -1,7 +1,7 @@
 % load_rocks_predicates.pl - Windows loader for rocks-predicates
 %
-% This file configures the module search paths to find the rocksdb-pack-windows
-% build, then loads the rocks-predicates library.
+% This file loads the rocks-predicates library, automatically detecting
+% whether rocksdb is available as an installed pack or needs local paths.
 %
 % Usage:
 %   ?- consult('load_rocks_predicates.pl').
@@ -13,13 +13,22 @@
     ensure_rocks_predicates/0
 ]).
 
-% Configure paths BEFORE loading library(rocksdb)
-% Point to the rocksdb-pack-windows build
-:- asserta(user:file_search_path(foreign, '../rocksdb-pack-windows/lib/x64-win64/Release')).
-:- asserta(user:file_search_path(library, '../rocksdb-pack-windows/prolog')).
+% Try to load rocksdb - first as installed pack, then from local build
+:- initialization(setup_rocksdb, now).
 
-% Now library(rocksdb) will resolve correctly
-:- use_module(library(rocksdb)).
+setup_rocksdb :-
+    % First, try loading rocksdb as an installed pack
+    catch(
+        use_module(library(rocksdb)),
+        _,
+        setup_local_rocksdb
+    ).
+
+setup_local_rocksdb :-
+    % Fallback: configure paths for local rocksdb-pack-windows build
+    asserta(user:file_search_path(foreign, '../rocksdb-pack-windows/lib/x64-win64/Release')),
+    asserta(user:file_search_path(library, '../rocksdb-pack-windows/prolog')),
+    use_module(library(rocksdb)).
 
 % Load rocks_preds from same directory
 :- use_module(rocks_preds).
@@ -53,6 +62,15 @@
     rdb_destroy_index/3
 ]).
 
+%!  ensure_rocks_predicates is det.
+%
+%   Confirmation predicate - prints status message.
+
 ensure_rocks_predicates :-
-    writeln('rocks-predicates loaded successfully for Windows').
-    writeln('RocksDB pack location: ../rocksdb-pack-windows/').
+    (   current_module(rocksdb)
+    ->  (   user:file_search_path(foreign, '../rocksdb-pack-windows/lib/x64-win64/Release')
+        ->  writeln('rocks-predicates loaded (using local rocksdb-pack-windows build)')
+        ;   writeln('rocks-predicates loaded (using installed rocksdb pack)')
+        )
+    ;   writeln('WARNING: rocksdb module not loaded')
+    ).
