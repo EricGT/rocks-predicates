@@ -14,21 +14,13 @@
 ]).
 
 % Try to load rocksdb - first as installed pack, then from local build
-:- initialization(setup_rocksdb, now).
-
-setup_rocksdb :-
-    % First, try loading rocksdb as an installed pack
-    catch(
-        use_module(library(rocksdb)),
-        _,
-        setup_local_rocksdb
-    ).
-
-setup_local_rocksdb :-
-    % Fallback: configure paths for local rocksdb-pack-windows build
-    asserta(user:file_search_path(foreign, '../rocksdb-pack-windows/lib/x64-win64/Release')),
-    asserta(user:file_search_path(library, '../rocksdb-pack-windows/prolog')),
-    use_module(library(rocksdb)).
+:- (   catch(use_module(library(rocksdb)), _, fail)
+   ->  true
+   ;   % Fallback: configure paths for local rocksdb-pack-windows build
+       asserta(user:file_search_path(foreign, '../rocksdb-pack-windows/lib/x64-win64/Release')),
+       asserta(user:file_search_path(library, '../rocksdb-pack-windows/prolog')),
+       use_module(library(rocksdb))
+   ).
 
 % Load rocks_preds from same directory
 :- use_module(rocks_preds).
